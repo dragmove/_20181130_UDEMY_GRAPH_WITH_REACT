@@ -19,9 +19,7 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       args: {
-        id: {
-          type: GraphQLString
-        }
+        id: { type: GraphQLString }
       },
       resolve(parentValue, args) {
         // return a actual piece of data from database or data store.
