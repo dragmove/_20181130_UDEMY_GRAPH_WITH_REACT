@@ -2,8 +2,10 @@ const _ = require('lodash');
 const graphql = require('graphql');
 const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
 
+// dummy data in DB
 const users = [{ id: '23', firstName: 'Bill', age: 20 }, { id: '47', firstName: 'Samantha', age: 21 }];
 
+// scheme example
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: {
@@ -13,6 +15,7 @@ const UserType = new GraphQLObjectType({
   }
 });
 
+// RootQuery: entry point of application
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
