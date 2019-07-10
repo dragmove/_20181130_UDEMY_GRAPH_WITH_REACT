@@ -1,7 +1,7 @@
 // const _ = require('lodash');
 const axios = require('axios');
 const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = graphql;
 
 // dummy data in DB
 /*
@@ -14,16 +14,22 @@ const users = [
 // scheme example
 const CompanyType = new GraphQLObjectType({
   name: 'Company',
-  fields: {
+  fields: () => ({
     id: { type: GraphQLString },
     name: { type: GraphQLString },
-    description: { type: GraphQLString }
-  }
+    description: { type: GraphQLString },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${parentValue.id}/users`).then(res => res.data);
+      }
+    }
+  })
 });
 
 const UserType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
     age: { type: GraphQLInt },
@@ -33,7 +39,7 @@ const UserType = new GraphQLObjectType({
         return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`).then(res => res.data);
       }
     }
-  }
+  })
 });
 
 // RootQuery: entry point of application
@@ -49,6 +55,16 @@ const RootQuery = new GraphQLObjectType({
         // return a actual piece of data from database or data store.
         // return _.find(users, { id: args.id });
         return axios.get(`http://localhost:3000/users/${args.id}`).then(res => res.data);
+      }
+    },
+
+    company: {
+      type: CompanyType,
+      args: {
+        id: { type: GraphQLString }
+      },
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${args.id}`).then(res => res.data);
       }
     }
   }
