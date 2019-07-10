@@ -14,9 +14,36 @@ npm run json:server // run json-server. // https://www.npmjs.com/package/json-se
 // Test http://localhost:3000/users/23  
 // Test http://localhost:3000/companies/2/users  
 
-npm run dev // run server.js by nodmon. connect http://localhost:9001 Web App
+npm run dev // run server.js by nodmon. connect GraphiQL tool with http://localhost:4000/graphql
 ```
 
+
+## GraphQL Query examples
+```sh
+// normal query
+{
+  user(id: "23") {
+    firstName
+    age
+  }
+}
+
+// circulation
+{
+  user(id: "47") {
+    firstName
+    age
+    company {
+      id
+      name
+      users {
+        id
+        firstName
+        age
+      }
+    }
+  }
+}
 
 ## Contact
 * @Website : http://www.dragmove.xyz
